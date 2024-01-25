@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import yellowLemon from './Logos/YellowLemon.png';
+import { Link } from 'react-router-dom';
 
 const Nav = () => {
     const [showNav, setShowNav] = useState(true);
     const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
+    const [menuOpen, setMenuOpen] = useState(true);
 
     const containerStyle = {
         margin: '0 auto',
@@ -13,21 +16,80 @@ const Nav = () => {
         left: 0,
         right: 0,
         backgroundColor: showNav ? '#495E57' : 'transparent',
-        transition: 'background-color 0.3s ease-in-out'
+        transition: 'background-color 0.3s ease-in-out',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: isMobile ? 'space-between' : 'center',
+    };
+
+    const listContainerStyle = {
+        flex: '1',
+        textAlign: 'left',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        color: '#F4CE14',
     };
 
     const listStyle = {
-        flex: '1',
-        textAlign: 'center',
-        padding: '5px',
+        listStyleType: 'none',
+        padding: 0,
+        margin: 0,
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-around'
+        flexDirection: isMobile ? 'column' : 'row',
+        justifyContent: isMobile ? 'center' : 'space-between', // Update justifyContent based on isMobile
+        width: '100%',
+        marginLeft: isMobile ? '15%' : '6%',
+        marginTop: isMobile ? '15px' : 0,
+        marginRight: isMobile ? 0 : '20%',
     };
 
-    const aStyle = { color: '#F4CE14', fontFamily: 'Markazi Text' };
+    const listItemStyle = {
+        padding: '12px',
+        fontSize: isMobile ? '18pt' : '12pt',
+        color: '#F4CE14',
+    };
+
+    const logoStyle = {
+        height: isMobile ? '40px' : '75px',
+        marginLeft: isMobile ? '49%' : '19%',
+        display: isMobile && menuOpen ? 'none' : 'block',
+        marginTop: isMobile ? '7%' : 0,
+    };
+
+    const hamburgerIconContainerStyle = {
+        width: '30px',
+        position: 'absolute',
+        left: '5%',
+        top: menuOpen && isMobile ? '25px' : '25px',
+    };
+
+    const hamburgerIconStyle = {
+        fontSize: '30px',
+        cursor: 'pointer',
+    };
+
+    const handleMenuToggle = () => {
+        setMenuOpen(!menuOpen);
+        if (!isMobile) {
+            setShowNav(true);
+            setMenuOpen(true);
+        }
+    };
+
+    const handleMenuItemClick = () => {
+        setMenuOpen(false);
+    };
 
     useEffect(() => {
+        const handleMobile = () => {
+            if (window.innerWidth <= 600) {
+                setMenuOpen(false);
+            }
+        };
+
+        window.addEventListener('load', handleMobile);
+
         const handleScroll = () => {
             const currentScrollPos = window.pageYOffset;
             setShowNav(prevScrollPos > currentScrollPos || currentScrollPos < 50);
@@ -35,35 +97,39 @@ const Nav = () => {
         };
 
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [prevScrollPos]);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [menuOpen, prevScrollPos]);
 
     return (
         <div style={{ height: showNav ? '125px' : '0', overflow: 'hidden', backgroundColor: showNav ? '#495E57' : 'transparent' }}>
             <div style={containerStyle}>
-                <ul style={{ listStyle: 'none', marginRight: '0', paddingRight: '20%', paddingLeft: '20%', display: 'flex' }}>
-                    <li style={listStyle}>
-                        <img src={yellowLemon} alt='Logo' style={{ height: '75px', marginRight: '5px' }} />
-                    </li>
-                    <li style={listStyle}>
-                        <a href="Home.js" style={aStyle}>Home</a>
-                    </li>
-                    <li style={listStyle}>
-                        <a href="About.js" style={aStyle}>About</a>
-                    </li>
-                    <li style={listStyle}>
-                        <a href="Menu.js" style={aStyle}>Menu</a>
-                    </li>
-                    <li style={listStyle}>
-                        <a href="Reservations.js" style={aStyle}>Reservations</a>
-                    </li>
-                    <li style={listStyle}>
-                        <a href="OrderOnline.js" style={aStyle}>Order Online</a>
-                    </li>
-                    <li style={listStyle}>
-                        <a href="Login.js" style={aStyle}>Login</a>
-                    </li>
-                </ul>
+                <div style={listContainerStyle} onClick={handleMenuToggle}>
+                    {isMobile && (
+                        <div style={hamburgerIconContainerStyle}>
+                            <span style={hamburgerIconStyle}>&#9776;</span>
+                        </div>
+                    )}
+                    <img src={yellowLemon} alt='Logo' style={logoStyle} />
+                    {menuOpen && (
+                        <ul style={listStyle}>
+                            <li style={listItemStyle} onClick={handleMenuItemClick}>
+                                <Link to='./' style={{ color: '#F4CE14' }}>Home</Link>
+                            </li>
+                            <li style={listItemStyle} onClick={handleMenuItemClick}>
+                                <Link to='./#about-section' style={{ color: '#F4CE14' }}>About</Link>
+                            </li>
+                            <li style={listItemStyle} onClick={handleMenuItemClick}>Menu</li>
+                            <li style={listItemStyle} onClick={handleMenuItemClick}>
+                                <Link to='./BookingsPage' style={{ color: '#F4CE14' }}>Reservations</Link>
+                            </li>
+                            <li style={listItemStyle} onClick={handleMenuItemClick}>Order Online</li>
+                            <li style={listItemStyle} onClick={handleMenuItemClick}>Login</li>
+                        </ul>
+                    )}
+                </div>
             </div>
         </div>
     );
