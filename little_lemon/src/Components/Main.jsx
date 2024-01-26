@@ -6,7 +6,7 @@ import About from './About';
 
 const Main = () => {
     return (
-        <div>
+        <div style={{ backgroundColor: '#F4CE14', paddingTop: '100px' }}>
             <Hero />
             <Highlights />
             <Testimonials />

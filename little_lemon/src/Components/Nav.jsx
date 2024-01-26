@@ -3,8 +3,6 @@ import yellowLemon from './Logos/YellowLemon.png';
 import { Link } from 'react-router-dom';
 
 const Nav = () => {
-    const [showNav, setShowNav] = useState(true);
-    const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
     const [menuOpen, setMenuOpen] = useState(true);
 
@@ -15,11 +13,11 @@ const Nav = () => {
         top: 0,
         left: 0,
         right: 0,
-        backgroundColor: showNav ? '#495E57' : 'transparent',
         transition: 'background-color 0.3s ease-in-out',
         display: 'flex',
         alignItems: 'center',
         justifyContent: isMobile ? 'space-between' : 'center',
+        backgroundColor: '#495E57' ,
     };
 
     const listContainerStyle = {
@@ -37,7 +35,7 @@ const Nav = () => {
         margin: 0,
         display: 'flex',
         flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: isMobile ? 'center' : 'space-between', // Update justifyContent based on isMobile
+        justifyContent: isMobile ? 'center' : 'space-between',
         width: '100%',
         marginLeft: isMobile ? '15%' : '6%',
         marginTop: isMobile ? '15px' : 0,
@@ -72,7 +70,6 @@ const Nav = () => {
     const handleMenuToggle = () => {
         setMenuOpen(!menuOpen);
         if (!isMobile) {
-            setShowNav(true);
             setMenuOpen(true);
         }
     };
@@ -89,22 +86,10 @@ const Nav = () => {
         };
 
         window.addEventListener('load', handleMobile);
-
-        const handleScroll = () => {
-            const currentScrollPos = window.pageYOffset;
-            setShowNav(prevScrollPos > currentScrollPos || currentScrollPos < 50);
-            setPrevScrollPos(currentScrollPos);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, [menuOpen, prevScrollPos]);
+    }, [menuOpen]);
 
     return (
-        <div style={{ height: showNav ? '125px' : '0', overflow: 'hidden', backgroundColor: showNav ? '#495E57' : 'transparent' }}>
+        <div style={{ backgroundColor: '#495E57' }}>
             <div style={containerStyle}>
                 <div style={listContainerStyle} onClick={handleMenuToggle}>
                     {isMobile && (

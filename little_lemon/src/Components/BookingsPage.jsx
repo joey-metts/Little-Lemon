@@ -2,7 +2,7 @@ import React from 'react';
 
 const Bookings = () => {
     return (
-        <div>
+        <div style={{ backgroundColor: '#F4CE14', paddingTop: '100px' }}>
             <form style={{ display: 'grid', maxWidth: '200px', gap: '20px' }} >
                 <label htmlFor="res-date">Choose date</label>
                 <input type="date" id="res-date" />
