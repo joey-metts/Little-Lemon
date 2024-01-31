@@ -37,3 +37,10 @@
   }
 }
 
+.star-filled {
+  color: #F4CE14;
+}
+
+.star-empty {
+  color: #495E57;
+}

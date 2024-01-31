@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 const Nav = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
     const [menuOpen, setMenuOpen] = useState(true);
+    const [prevScrollPos, setPrevScrollPos] = useState(window.scrollY);
+    const [visible, setVisible] = useState(true);
 
     const containerStyle = {
         margin: '0 auto',
@@ -80,17 +82,36 @@ const Nav = () => {
 
     useEffect(() => {
         const handleMobile = () => {
-            if (window.innerWidth <= 600) {
-                setMenuOpen(false);
-            }
+          if (window.innerWidth <= 600) {
+            setMenuOpen(false);
+          }
+        };
+
+        const handleScroll = () => {
+          const currentScrollPos = window.scrollY;
+          const scrollingDown = prevScrollPos < currentScrollPos;
+
+          setPrevScrollPos(currentScrollPos);
+
+          if (scrollingDown && visible) {
+            setVisible(false);
+          } else if (!scrollingDown && !visible) {
+            setVisible(true);
+          }
         };
 
         window.addEventListener('load', handleMobile);
-    }, [menuOpen]);
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+          window.removeEventListener('load', handleMobile);
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, [menuOpen, prevScrollPos, visible]);
 
     return (
         <div style={{ backgroundColor: '#495E57' }}>
-            <div style={containerStyle}>
+            <div style={{ ...containerStyle, visibility: visible ? 'visible' : 'hidden' }}>
                 <div style={listContainerStyle} onClick={handleMenuToggle}>
                     {isMobile && (
                         <div style={hamburgerIconContainerStyle}>
