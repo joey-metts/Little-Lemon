@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import ConfirmationPopup from './ConfirmationPopup';
 
-const timesReducer = (state, action) => {
+export const timesReducer = (state, action) => {
   switch (action.type) {
     case 'UPDATE_TIMES':
       return action.allAvailableTimes;
@@ -19,8 +19,9 @@ const Bookings = ({ availableTimes }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
+    console.log('Inside useEffect:', selectedDate);
     dispatch({ type: 'UPDATE_TIMES', selectedDate, allAvailableTimes: availableTimes });
-  }, [availableTimes, selectedDate]);
+  }, [selectedDate, availableTimes, dispatch]);
 
   const handleDateChange = (e) => {
     const newSelectedDate = e.target.value;
@@ -39,6 +40,8 @@ const Bookings = ({ availableTimes }) => {
   const handleCloseConfirmation = () => {
     setShowConfirmation(false);
   };
+
+  console.log(selectedDate)
 
   return (
     <div
@@ -64,6 +67,7 @@ const Bookings = ({ availableTimes }) => {
         <input
           type="date"
           id="res-date"
+          data-testid="res-date"
           value={selectedDate}
           onChange={handleDateChange}
         />
@@ -84,7 +88,12 @@ const Bookings = ({ availableTimes }) => {
           <option>Anniversary</option>
           <option>Not Applicable</option>
         </select>
-        <input type="submit" value="Make your Reservation" style={{ borderRadius: '16px', fontWeight: 'bold', fontSize: '12pt', alignSelf: 'center', padding: '10px', backgroundColor: '#495E57', color: '#F4CE14', border: 'none', cursor: 'pointer', marginTop: '8px' }} />
+        <input
+            type="submit"
+            value="Make your Reservation"
+            style={{ borderRadius: '16px', fontWeight: 'bold', fontSize: '12pt', alignSelf: 'center', padding: '10px', backgroundColor: '#495E57', color: '#F4CE14', border: 'none', cursor: 'pointer', marginTop: '8px' }}
+            data-testid="submit-button"
+        />
       </form>
 
       {showConfirmation && <ConfirmationPopup onClose={handleCloseConfirmation} />}
