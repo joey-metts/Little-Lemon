@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import ConfirmationPopup from './ConfirmationPopup';
+import { fetchAPI, submitAPI } from './api.js';
 
 export const timesReducer = (state, action) => {
   switch (action.type) {
@@ -19,29 +20,70 @@ const Bookings = ({ availableTimes }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    console.log('Inside useEffect:', selectedDate);
-    dispatch({ type: 'UPDATE_TIMES', selectedDate, allAvailableTimes: availableTimes });
-  }, [selectedDate, availableTimes, dispatch]);
+    const fetchTimes = async (date) => {
+      try {
+        const times = await fetchAPI(date);
+        dispatch({ type: 'UPDATE_TIMES', allAvailableTimes: times });
+      } catch (error) {
+        console.error('Error fetching available times:', error);
+      }
+    };
 
-  const handleDateChange = (e) => {
+    fetchTimes(selectedDate);
+  }, [selectedDate]);
+
+  const handleDateChange = async (e) => {
     const newSelectedDate = e.target.value;
     setSelectedDate(newSelectedDate);
+
+    try {
+      const times = await fetchAPI(newSelectedDate);
+      dispatch({ type: 'UPDATE_TIMES', allAvailableTimes: times });
+    } catch (error) {
+      console.error('Error fetching available times:', error);
+    }
+  };
+
+  const fetchTimes = async (date) => {
+    try {
+      const times = await fetchAPI(date);
+      dispatch({ type: 'UPDATE_TIMES', allAvailableTimes: times });
+    } catch (error) {
+      console.error('Error fetching available times:', error);
+    }
   };
 
   const handleTimeChange = (e) => {
     setSelectedTime(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowConfirmation(true);
+
+    try {
+      const formData = {
+        date: selectedDate,
+        time: selectedTime,
+      };
+
+      const submissionResult = await submitAPI(formData);
+
+      if (submissionResult) {
+        fetchTimes(selectedDate);
+        setShowConfirmation(true);
+      } else {
+        console.error('Form submission failed.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   const handleCloseConfirmation = () => {
     setShowConfirmation(false);
   };
 
-  console.log(selectedDate)
+  console.log(selectedDate);
 
   return (
     <div
@@ -72,7 +114,7 @@ const Bookings = ({ availableTimes }) => {
           onChange={handleDateChange}
         />
         <label htmlFor="res-time">Choose time</label>
-        <select id="res-time" value={selectedTime} onChange={handleTimeChange}>
+        <select id="res-time" data-testid="res-time" value={selectedTime} onChange={handleTimeChange}>
           {Array.isArray(stateAvailableTimes) &&
             stateAvailableTimes.map((time) => (
               <option key={time} value={time}>
