@@ -35,7 +35,7 @@ const Highlights = () => {
     return (
         <div style={{ backgroundColor: '#495E57', padding: '20px' }}>
             <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', textAlign: isMobile ? 'center' : 'left' }}>
-                <h2 style={{ flex: '2', color: 'white', fontSize: '40pt', color: '#F4CE14', marginLeft: isMobile ? '0' : '12%' }}>Specials</h2>
+                <h2 style={{ flex: '2', fontSize: '40pt', color: '#F4CE14', marginLeft: isMobile ? '0' : '12%' }}>Specials</h2>
                 {isMobile && (
                     <button style={{ flex: '2', height: '75%', borderRadius: '16px', fontWeight: 'bold', fontSize: '16pt', alignSelf: 'center', margin: '10px', width: '90%', backgroundColor: '#F4CE14', color: '#495E57', border: 'none', cursor: 'pointer' }}>
                         Online Menu
