@@ -56,6 +56,7 @@ const Bookings = ({ availableTimes }) => {
 
       if (submissionResult) {
         setShowConfirmation(true);
+        console.log('Form submission successful!')
       } else {
         console.error('Form submission failed.');
       }
@@ -105,8 +106,7 @@ const Bookings = ({ availableTimes }) => {
               onChange={handleTimeChange}
               required
             >
-              {Array.isArray(stateAvailableTimes) &&
-                stateAvailableTimes.map((time) => (
+              {stateAvailableTimes.map((time) => (
                   <option key={time} value={time}>
                     {time}
                   </option>
