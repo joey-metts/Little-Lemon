@@ -57,17 +57,14 @@ test('JavaScript validation functions work correctly', async () => {
   fireEvent.click(submitButton);
 
   await act(async () => {
-    // Use the spy in the expectation
-    // Extend the timeout to allow more time for the asynchronous code to complete
     await waitFor(() => {
       expect(consoleLogSpy).toHaveBeenCalledWith('Form submission successful!');
-    }, { timeout: 3000 }); // Adjust the timeout as needed
+    }, { timeout: 3000 });
   });
 
   fireEvent.change(dateInput, { target: { value: '' } });
   fireEvent.click(submitButton);
 
-  // Clean up the spy
   consoleLogSpy.mockRestore();
 
   expect(console.error).toHaveBeenCalledWith('Form submission failed.');

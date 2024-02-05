@@ -43,11 +43,11 @@ const availableTimesByDate = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (formData) {
-          resolve(true); // Simulate successful submission
+          resolve(true);
         } else {
           reject(new Error('Form submission failed.'));
         }
-      }, 1000); // Simulate API delay
+      }, 1000);
     });
   };
 

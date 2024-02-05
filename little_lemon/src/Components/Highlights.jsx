@@ -27,7 +27,6 @@ const Highlights = () => {
     }, []);
 
     if (isMobile) {
-        // If isMobile is true, stack cards in a column
         cardContainerStyle.flexDirection = 'column';
         cardContainerStyle.alignItems = 'center';
     }
